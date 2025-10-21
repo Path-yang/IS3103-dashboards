@@ -79,3 +79,74 @@ export type WasteResponse = {
   }[];
   records: WasteRecord[];
 };
+
+// Customer Analytics Types
+export type OrderRecord = {
+  id: string;
+  customerId: string;
+  outletId: string;
+  outletName: string;
+  tsISO: string;
+  items: {
+    ingredientId: string;
+    name: string;
+    category: string;
+    qty: number;
+    weightGrams: number;
+  }[];
+  spend: number;
+  soupBase: string;
+  spiceLevel: "Mild" | "Medium" | "Spicy";
+};
+
+export type CustomerProfile = {
+  id: string;
+  tier: "Bronze" | "Silver" | "Gold" | "Platinum";
+  avgSpend: number;
+  visits: number;
+  favouriteCombo: string;
+  preferences: {
+    spice: number;
+    protein: number;
+    vegetables: number;
+    soupBase: number;
+    addons: number;
+  };
+};
+
+export type Recommendation = {
+  item: string;
+  reason: string;
+};
+
+// Geospatial Types
+export type OutletPerf = {
+  id: string;
+  name: string;
+  lat: number;
+  lng: number;
+  revenue: number;
+  footfall: number;
+  aov: number;
+  satisfaction: number;
+  repeatRate: number;
+  competitorsNearby: number;
+  trendSeries: { tsISO: string; value: number }[];
+};
+
+export type CompetitorPin = {
+  id: string;
+  name: string;
+  lat: number;
+  lng: number;
+  type: "hotpot" | "mala";
+};
+
+export type PopulationHeatBucket = {
+  lat: number;
+  lng: number;
+  intensity: number;
+  radius: number;
+};
+
+export type GeoLayer = "population" | "transport" | "competitors";

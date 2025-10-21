@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { MapPin, TrendingUp, Refrigerator, Scale, Trash2 } from "lucide-react";
+import { MapPin, TrendingUp, Refrigerator, Scale, Trash2, ShoppingCart, User, Map } from "lucide-react";
 
 const dashboards = [
   {
@@ -43,6 +43,30 @@ const dashboards = [
     color: "text-orange-600",
     bgColor: "bg-orange-50",
   },
+  {
+    title: "Customer Insights",
+    description: "Operational trends: orders, spending patterns, peak hours, and ingredient popularity",
+    href: "/dashboards/customer-insights",
+    icon: ShoppingCart,
+    color: "text-cyan-600",
+    bgColor: "bg-cyan-50",
+  },
+  {
+    title: "Customer Personalisation",
+    description: "Per-customer analysis with tailored recommendations and preference profiles",
+    href: "/dashboards/personalisation",
+    icon: User,
+    color: "text-pink-600",
+    bgColor: "bg-pink-50",
+  },
+  {
+    title: "Geospatial Analytics",
+    description: "Map-based outlet performance with competitive landscape and expansion insights",
+    href: "/dashboards/geospatial",
+    icon: Map,
+    color: "text-emerald-600",
+    bgColor: "bg-emerald-50",
+  },
 ];
 
 export default function HomePage() {
@@ -56,9 +80,10 @@ export default function HomePage() {
           <h2 className="text-3xl font-semibold text-primary mb-4">
             IoT Analytics Dashboards
           </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Comprehensive backend analytics platform for monitoring cold-chain integrity,
-            ingredient levels, consumption patterns, and waste management across all outlets.
+          <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+            Comprehensive analytics platform for monitoring cold-chain integrity,
+            ingredient levels, consumption patterns, waste management, customer insights,
+            and geospatial performance across all outlets.
           </p>
         </div>
 
