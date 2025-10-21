@@ -5,7 +5,6 @@ import dynamic from "next/dynamic";
 import { PageHeader } from "@/components/shared/page-header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Table,
   TableBody,
@@ -27,12 +26,9 @@ const GeoMap = dynamic(() => import("@/components/dashboards/geo-map"), {
 
 export default function GeospatialPage() {
   const [outlets, setOutlets] = useState<OutletPerf[]>([]);
-  const [selectedLayers, setSelectedLayers] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [sortField, setSortField] = useState<keyof OutletPerf>("revenue");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
-
-  const hasMapbox = !!process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
   useEffect(() => {
     fetch("/api/geo/outlets")
@@ -88,36 +84,18 @@ export default function GeospatialPage() {
         showBackButton={true}
       />
 
-      {/* Map or Fallback */}
-      {hasMapbox ? (
-        <>
-          <Card className="mb-6">
-            <CardHeader>
-              <CardTitle>Outlet Performance Map</CardTitle>
-              <Tabs value={selectedLayers.join(",")} onValueChange={(v) => setSelectedLayers(v.split(",").filter(Boolean))}>
-                <TabsList>
-                  <TabsTrigger value="">Base Map</TabsTrigger>
-                  <TabsTrigger value="population">+ Population</TabsTrigger>
-                  <TabsTrigger value="competitors">+ Competitors</TabsTrigger>
-                  <TabsTrigger value="transport">+ Transport</TabsTrigger>
-                </TabsList>
-              </Tabs>
-            </CardHeader>
-            <CardContent>
-              <GeoMap outlets={outlets} layers={selectedLayers} />
-            </CardContent>
-          </Card>
-        </>
-      ) : (
-        <Card className="mb-6 bg-yellow-50 border-yellow-200">
-          <CardContent className="p-6">
-            <p className="text-sm text-yellow-800">
-              Map view is unavailable. Set <code className="px-1 py-0.5 bg-yellow-100 rounded">MAPBOX_TOKEN</code> environment variable to enable interactive map.
-              Showing table view below.
-            </p>
-          </CardContent>
-        </Card>
-      )}
+      {/* Interactive Map */}
+      <Card className="mb-6">
+        <CardHeader>
+          <CardTitle>Outlet Performance Map (OpenStreetMap)</CardTitle>
+          <p className="text-sm text-muted-foreground mt-1">
+            Circle size = revenue, Color: Green (high) &gt; Blue (medium) &gt; Orange (needs attention)
+          </p>
+        </CardHeader>
+        <CardContent>
+          <GeoMap outlets={outlets} layers={[]} />
+        </CardContent>
+      </Card>
 
       {/* Insights Callouts */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
