@@ -33,9 +33,16 @@ import type { CustomerProfile, Recommendation } from "@/lib/types";
 
 export default function PersonalisationPage() {
   const [selectedCustomer, setSelectedCustomer] = useState<string>("");
-  const [customerData, setCustomerData] = useState<any>(null);
+  const [customerData, setCustomerData] = useState<{
+    profile: CustomerProfile;
+    orderHistory: { category: string; count: number }[];
+    totalOrders: number;
+  } | null>(null);
   const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
-  const [segment, setSegment] = useState<any>(null);
+  const [segment, setSegment] = useState<{
+    similarCustomers: CustomerProfile[];
+    segmentSize: number;
+  } | null>(null);
   const [loading, setLoading] = useState(true);
 
   const customers = generateCustomers();

@@ -41,11 +41,16 @@ const COLORS = ["#3b82f6", "#ef4444", "#10b981", "#f59e0b", "#8b5cf6"];
 export default function CustomerInsightsPage() {
   const [window, setWindow] = useState<TimeWindow>("30d");
   const [selectedOutlets, setSelectedOutlets] = useState<string[]>([]);
-  const [kpis, setKpis] = useState<any>(null);
-  const [topIngredients, setTopIngredients] = useState<any[]>([]);
-  const [ordersByHour, setOrdersByHour] = useState<any[]>([]);
-  const [soupDistribution, setSoupDistribution] = useState<any[]>([]);
-  const [spiceDistribution, setSpiceDistribution] = useState<any[]>([]);
+  const [kpis, setKpis] = useState<{
+    totalOrders: number;
+    avgOrderValue: number;
+    repeatCustomerPct: number;
+    mostPopularIngredient: string;
+  } | null>(null);
+  const [topIngredients, setTopIngredients] = useState<{ ingredientId: string; name: string; count: number }[]>([]);
+  const [ordersByHour, setOrdersByHour] = useState<{ hour: string; count: number }[]>([]);
+  const [soupDistribution, setSoupDistribution] = useState<{ name: string; value: number }[]>([]);
+  const [spiceDistribution, setSpiceDistribution] = useState<{ name: string; value: number }[]>([]);
   const [loading, setLoading] = useState(true);
 
   const outlets = generateOutlets();
