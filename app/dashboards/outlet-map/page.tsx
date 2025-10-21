@@ -47,6 +47,7 @@ export default function OutletMapPage() {
       <PageHeader
         title="Outlet Cold-Chain Map"
         description="Real-time temperature monitoring across all outlet locations"
+        showBackButton={true}
       />
 
       <div className="mb-6">

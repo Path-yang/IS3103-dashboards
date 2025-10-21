@@ -91,6 +91,7 @@ export default function ChillerConsumptionPage() {
       <PageHeader
         title="Consumption Estimation (Weight Taken)"
         description="Track ingredient consumption patterns over time"
+        showBackButton={true}
       />
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">

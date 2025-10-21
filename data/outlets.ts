@@ -17,7 +17,7 @@ const SINGAPORE_LOCATIONS = [
 
 export function generateOutlets(): Outlet[] {
   return SINGAPORE_LOCATIONS.map((location, idx) => {
-    const isAbnormal = Math.random() > 0.65; // 35% abnormal
+    const isAbnormal = Math.random() > 0.92; // ~8% abnormal (0-1 outlets usually)
     const lastTempC = isAbnormal ? 4.5 + Math.random() * 3 : 1.5 + Math.random() * 2;
     const lastHeartbeatISO = new Date(
       Date.now() - Math.random() * 3600000

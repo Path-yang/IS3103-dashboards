@@ -61,6 +61,7 @@ export default function ColdChainTrendsPage() {
       <PageHeader
         title="Cold-Chain Trends & Alerts"
         description="Abnormal temperature readings and outlet performance analysis"
+        showBackButton={true}
       />
 
       <Tabs value={window} onValueChange={(v) => setWindow(v as TimeWindow)} className="mb-6">

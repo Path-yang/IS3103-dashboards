@@ -12,25 +12,30 @@ function generateTimeSeries(window: TimeWindow): ColdChainTimeSeries[] {
 
   let intervals: number;
   let intervalMs: number;
+  let maxAbnormal: number;
 
   switch (window) {
     case "24h":
       intervals = 24;
       intervalMs = 3600000; // 1 hour
+      maxAbnormal = 1; // 0-1 per hour
       break;
     case "7d":
       intervals = 7;
       intervalMs = 86400000; // 1 day
+      maxAbnormal = 1; // 0-1 per day
       break;
     case "30d":
       intervals = 30;
       intervalMs = 86400000; // 1 day
+      maxAbnormal = 2; // 0-2 per day
       break;
   }
 
   for (let i = intervals - 1; i >= 0; i--) {
     const timestamp = new Date(now - i * intervalMs).toISOString();
-    const abnormalCount = Math.floor(Math.random() * 8) + 2; // 2-10 alerts
+    // Most times 0, occasionally 1-max
+    const abnormalCount = Math.random() > 0.7 ? Math.floor(Math.random() * maxAbnormal) + 1 : 0;
 
     series.push({
       timestamp,
@@ -46,7 +51,8 @@ function generateOutletBreakdown(): OutletAbnormalCount[] {
   return outlets.map((outlet) => ({
     outletId: outlet.id,
     outletName: outlet.name,
-    abnormalCount: Math.floor(Math.random() * 25) + 5, // 5-30 alerts
+    // Most outlets have 0-5 alerts, a few have more
+    abnormalCount: Math.random() > 0.3 ? Math.floor(Math.random() * 3) : Math.floor(Math.random() * 8) + 3,
   }));
 }
 

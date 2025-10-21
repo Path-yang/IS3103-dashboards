@@ -88,6 +88,7 @@ export default function FoodWastePage() {
       <PageHeader
         title="Food Waste Dashboard"
         description="Track and analyze food waste by ingredient type and disposal reason"
+        showBackButton={true}
       />
 
       <Card className="mb-6">

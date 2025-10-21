@@ -58,6 +58,7 @@ export default function ChillerLevelsPage() {
       <PageHeader
         title="Front Chiller Levels & Refill Frequency"
         description="Monitor ingredient tray fill levels and refill activities"
+        showBackButton={true}
       />
 
       <div className="mb-6">
