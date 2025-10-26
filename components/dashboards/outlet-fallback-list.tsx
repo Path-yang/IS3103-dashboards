@@ -37,7 +37,7 @@ export function OutletFallbackList({ outlets, onOutletClick }: OutletFallbackLis
                 <div className="flex items-start justify-between">
                   <CardTitle className="text-lg">{outlet.name}</CardTitle>
                   <Badge variant={outlet.status === "green" ? "success" : "destructive"}>
-                    {outlet.lastTempC}°C
+                    Current temperature: {outlet.lastTempC}°C
                   </Badge>
                 </div>
               </CardHeader>
