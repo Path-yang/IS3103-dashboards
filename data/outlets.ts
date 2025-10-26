@@ -61,25 +61,28 @@ export function generateTempReadings24h(): TempReading[] {
 export function generateOutletTempTrend(outletId: string, isCurrentlyAbnormal: boolean): { value: number; isAbnormal: boolean }[] {
   const data = [];
   const baseTemp = 2.5;
+  const threshold = 4.0;
   
-  // Generate 24 hours of data
+  // Generate 24 hours of data with reduced fluctuation
   for (let i = 0; i < 24; i++) {
-    const variation = Math.random() * 2 - 0.5; // -0.5 to +1.5
+    // Reduced variation for less dramatic fluctuation
+    const variation = (Math.random() - 0.5) * 1.5; // -0.75 to +0.75 (was -0.5 to +1.5)
     let temp = baseTemp + variation;
     
-    // For currently abnormal outlets, make the last few readings abnormal
+    // For currently abnormal outlets, make the last few readings abnormal (at peaks)
     if (isCurrentlyAbnormal && i >= 20) {
-      temp = 4.5 + Math.random() * 2; // 4.5-6.5°C
+      temp = threshold + Math.random() * 2; // 4.0-6.0°C
     }
     
-    // For normal outlets, add 1-2 historical anomalies randomly
-    if (!isCurrentlyAbnormal && Math.random() < 0.15) { // 15% chance per hour
-      temp = 4.5 + Math.random() * 2; // 4.5-6.5°C
+    // For normal outlets, add 1-2 historical anomalies only at peaks
+    if (!isCurrentlyAbnormal && Math.random() < 0.1) { // Reduced from 15% to 10%
+      // Only create anomalies that exceed threshold (at peaks)
+      temp = threshold + Math.random() * 1.5; // 4.0-5.5°C
     }
     
     data.push({
       value: Math.round(Math.max(0, temp) * 10) / 10,
-      isAbnormal: temp > 4,
+      isAbnormal: temp > threshold,
     });
   }
   

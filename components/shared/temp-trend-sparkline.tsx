@@ -15,6 +15,7 @@ export function TempTrendSparkline({ data }: TempTrendSparklineProps) {
   const width = 200;
   const height = 40;
   const padding = 2;
+  const threshold = 4.0;
   
   if (data.length === 0) return <div className="h-10 w-full bg-muted animate-pulse rounded" />;
   
@@ -30,6 +31,9 @@ export function TempTrendSparkline({ data }: TempTrendSparklineProps) {
     const y = padding + ((maxValue - point.value) / range) * (height - 2 * padding);
     return { x, y, isAbnormal: point.isAbnormal };
   });
+  
+  // Calculate threshold line position
+  const thresholdY = padding + ((maxValue - threshold) / range) * (height - 2 * padding);
   
   // Create one continuous path with gradient stops for color changes
   const pathData = points.reduce((path, point, i) => {
@@ -53,6 +57,20 @@ export function TempTrendSparkline({ data }: TempTrendSparklineProps) {
             ))}
           </linearGradient>
         </defs>
+        
+        {/* Dotted threshold line at 4°C */}
+        <line
+          x1={padding}
+          y1={thresholdY}
+          x2={width - padding}
+          y2={thresholdY}
+          stroke="#6b7280"
+          strokeWidth="1"
+          strokeDasharray="2,2"
+          opacity="0.6"
+        />
+        
+        {/* Temperature trend line */}
         <path
           d={pathData}
           stroke="url(#tempGradient)"
