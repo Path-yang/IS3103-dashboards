@@ -31,15 +31,21 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import type { WasteResponse } from "@/lib/types";
+import type { WasteResponse, WasteRecord } from "@/lib/types";
 import { INGREDIENTS } from "@/data/ingredients";
 import { formatShortDate } from "@/lib/utils";
 
+const DISPOSAL_REASON_LABELS: Record<WasteRecord["disposalReason"], string> = {
+  expiry: "Expiry",
+  leftover_display: "Leftover from Selection Counter",
+  quality: "Quality",
+};
+
 const DISPOSAL_REASONS = [
   { id: "all", name: "All Reasons" },
-  { id: "expiry", name: "Expiry" },
-  { id: "leftover_display", name: "Leftover from Display" },
-  { id: "quality", name: "Quality Issues" },
+  { id: "expiry", name: DISPOSAL_REASON_LABELS.expiry },
+  { id: "leftover_display", name: DISPOSAL_REASON_LABELS.leftover_display },
+  { id: "quality", name: DISPOSAL_REASON_LABELS.quality },
 ];
 
 export default function FoodWastePage() {
@@ -180,7 +186,7 @@ export default function FoodWastePage() {
                   <TableCell>{record.ingredientName}</TableCell>
                   <TableCell>
                     <Badge variant="outline">
-                      {record.disposalReason.replace("_", " ")}
+                      {DISPOSAL_REASON_LABELS[record.disposalReason]}
                     </Badge>
                   </TableCell>
                   <TableCell className="text-right font-medium">
