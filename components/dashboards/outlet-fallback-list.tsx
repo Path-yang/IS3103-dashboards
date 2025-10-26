@@ -4,7 +4,7 @@ import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { TempTrendSparkline } from "@/components/shared/temp-trend-sparkline";
-import { generateOutletTempTrend } from "@/data/outlets";
+import { generateOutletTempTrendWithStatus } from "@/data/outlets";
 import type { Outlet } from "@/lib/types";
 import { formatDate } from "@/lib/utils";
 
@@ -24,7 +24,7 @@ export function OutletFallbackList({ outlets, onOutletClick }: OutletFallbackLis
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {outlets.map((outlet) => {
-          const tempTrendData = generateOutletTempTrend(outlet.id, outlet.status === "red");
+          const tempData = generateOutletTempTrendWithStatus(outlet.id, outlet.status === "red");
 
           return (
             <Card
@@ -47,7 +47,7 @@ export function OutletFallbackList({ outlets, onOutletClick }: OutletFallbackLis
                   </div>
                   <div className="mt-2">
                     <p className="text-xs text-muted-foreground mb-1">24h Temperature Trend</p>
-                    <TempTrendSparkline data={tempTrendData} />
+                    <TempTrendSparkline data={tempData.trendData} />
                   </div>
                 </div>
               </CardContent>

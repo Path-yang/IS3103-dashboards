@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { TempTrendSparkline } from "@/components/shared/temp-trend-sparkline";
-import { generateOutletTempTrend } from "@/data/outlets";
+import { generateOutletTempTrendWithStatus } from "@/data/outlets";
 import type { Outlet, TempReading } from "@/lib/types";
 import { formatDate } from "@/lib/utils";
 
@@ -35,7 +35,7 @@ export function OutletDetailsDrawer({ outlet, isOpen, onClose }: OutletDetailsDr
 
   if (!isOpen || !outlet) return null;
 
-  const tempTrendData = generateOutletTempTrend(outlet.id, outlet.status === "red");
+  const tempData = generateOutletTempTrendWithStatus(outlet.id, outlet.status === "red");
 
   return (
     <>
@@ -98,7 +98,7 @@ export function OutletDetailsDrawer({ outlet, isOpen, onClose }: OutletDetailsDr
                 <div className="h-40 bg-muted animate-pulse rounded" />
               ) : (
                 <div className="h-40 border rounded-lg p-4">
-                  <TempTrendSparkline data={tempTrendData} />
+                  <TempTrendSparkline data={tempData.trendData} />
                 </div>
               )}
             </div>

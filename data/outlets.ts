@@ -16,9 +16,12 @@ const SINGAPORE_LOCATIONS = [
 ];
 
 export function generateOutlets(): Outlet[] {
+  // Randomly select exactly one outlet to be currently abnormal
+  const abnormalOutletIndex = Math.floor(Math.random() * SINGAPORE_LOCATIONS.length);
+
   return SINGAPORE_LOCATIONS.map((location, idx) => {
-    const isAbnormal = Math.random() > 0.92; // ~8% abnormal (0-1 outlets usually)
-    const lastTempC = isAbnormal ? 4.5 + Math.random() * 3 : 1.5 + Math.random() * 2;
+    const isCurrentlyAbnormal = idx === abnormalOutletIndex;
+    const tempData = generateOutletTempTrendWithStatus(`outlet-${idx + 1}`, isCurrentlyAbnormal);
     const lastHeartbeatISO = new Date(
       Date.now() - Math.random() * 3600000
     ).toISOString();
@@ -28,9 +31,9 @@ export function generateOutlets(): Outlet[] {
       name: location.name,
       lat: location.lat,
       lng: location.lng,
-      lastTempC: Math.round(lastTempC * 10) / 10,
+      lastTempC: tempData.currentTemp,
       lastHeartbeatISO,
-      status: lastTempC > 4 ? "red" : "green",
+      status: tempData.currentStatus,
     };
   });
 }
@@ -81,4 +84,23 @@ export function generateOutletTempTrend(outletId: string, isCurrentlyAbnormal: b
   }
   
   return data;
+}
+
+export function generateOutletTempTrendWithStatus(outletId: string, isCurrentlyAbnormal: boolean): { 
+  trendData: { value: number; isAbnormal: boolean }[]; 
+  currentTemp: number; 
+  currentStatus: "green" | "red" 
+} {
+  const trendData = generateOutletTempTrend(outletId, isCurrentlyAbnormal);
+  
+  // Get the last (most recent) temperature reading
+  const lastReading = trendData[trendData.length - 1];
+  const currentTemp = lastReading.value;
+  const currentStatus = lastReading.isAbnormal ? "red" : "green";
+  
+  return {
+    trendData,
+    currentTemp,
+    currentStatus,
+  };
 }

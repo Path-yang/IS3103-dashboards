@@ -31,53 +31,36 @@ export function TempTrendSparkline({ data }: TempTrendSparklineProps) {
     return { x, y, isAbnormal: point.isAbnormal };
   });
   
-  // Create path segments
-  const segments: { path: string; color: string }[] = [];
-  let currentSegment: { x: number; y: number; isAbnormal: boolean }[] = [];
-  let currentColor = points[0].isAbnormal ? "#ef4444" : "#22c55e";
+  // Create one continuous path with gradient stops for color changes
+  const pathData = points.reduce((path, point, i) => {
+    return i === 0 ? `M ${point.x} ${point.y}` : `${path} L ${point.x} ${point.y}`;
+  }, '');
   
-  points.forEach((point, index) => {
-    const pointColor = point.isAbnormal ? "#ef4444" : "#22c55e";
-    
-    if (pointColor !== currentColor) {
-      // Color changed, save current segment
-      if (currentSegment.length > 1) {
-        const path = currentSegment.reduce((path, point, i) => {
-          return i === 0 ? `M ${point.x} ${point.y}` : `${path} L ${point.x} ${point.y}`;
-        }, '');
-        segments.push({ path, color: currentColor });
-      }
-      currentSegment = [point];
-      currentColor = pointColor;
-    } else {
-      currentSegment.push(point);
-    }
-    
-    // If this is the last point, save the segment
-    if (index === points.length - 1) {
-      if (currentSegment.length > 1) {
-        const path = currentSegment.reduce((path, point, i) => {
-          return i === 0 ? `M ${point.x} ${point.y}` : `${path} L ${point.x} ${point.y}`;
-        }, '');
-        segments.push({ path, color: currentColor });
-      }
-    }
+  // Create gradient definition for color changes
+  const gradientStops = points.map((point, index) => {
+    const offset = (index / (points.length - 1)) * 100;
+    const color = point.isAbnormal ? "#ef4444" : "#22c55e";
+    return { offset, color };
   });
   
   return (
     <div className="w-full h-10">
       <svg width="100%" height="100%" viewBox={`0 0 ${width} ${height}`} className="overflow-visible">
-        {segments.map((segment, index) => (
-          <path
-            key={index}
-            d={segment.path}
-            stroke={segment.color}
-            strokeWidth="2"
-            fill="none"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        ))}
+        <defs>
+          <linearGradient id="tempGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+            {gradientStops.map((stop, index) => (
+              <stop key={index} offset={`${stop.offset}%`} stopColor={stop.color} />
+            ))}
+          </linearGradient>
+        </defs>
+        <path
+          d={pathData}
+          stroke="url(#tempGradient)"
+          strokeWidth="2"
+          fill="none"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
       </svg>
     </div>
   );
