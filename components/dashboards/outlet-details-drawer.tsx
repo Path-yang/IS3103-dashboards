@@ -5,7 +5,8 @@ import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { TinySparkline } from "@/components/shared/tiny-sparkline";
+import { TempTrendSparkline } from "@/components/shared/temp-trend-sparkline";
+import { generateOutletTempTrend } from "@/data/outlets";
 import type { Outlet, TempReading } from "@/lib/types";
 import { formatDate } from "@/lib/utils";
 
@@ -34,7 +35,7 @@ export function OutletDetailsDrawer({ outlet, isOpen, onClose }: OutletDetailsDr
 
   if (!isOpen || !outlet) return null;
 
-  const sparklineData = tempHistory.map((reading) => ({ value: reading.tempC }));
+  const tempTrendData = generateOutletTempTrend(outlet.id, outlet.status === "red");
 
   return (
     <>
@@ -97,10 +98,7 @@ export function OutletDetailsDrawer({ outlet, isOpen, onClose }: OutletDetailsDr
                 <div className="h-40 bg-muted animate-pulse rounded" />
               ) : (
                 <div className="h-40 border rounded-lg p-4">
-                  <TinySparkline
-                    data={sparklineData}
-                    color={outlet.status === "green" ? "#22c55e" : "#ef4444"}
-                  />
+                  <TempTrendSparkline data={tempTrendData} />
                 </div>
               )}
             </div>
