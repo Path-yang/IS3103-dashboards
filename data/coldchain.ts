@@ -12,30 +12,36 @@ function generateTimeSeries(window: TimeWindow): ColdChainTimeSeries[] {
 
   let intervals: number;
   let intervalMs: number;
-  let maxAbnormal: number;
 
   switch (window) {
     case "24h":
       intervals = 24;
       intervalMs = 3600000; // 1 hour
-      maxAbnormal = 1; // 0-1 per hour
       break;
     case "7d":
       intervals = 7;
       intervalMs = 86400000; // 1 day
-      maxAbnormal = 1; // 0-1 per day
       break;
     case "30d":
       intervals = 30;
       intervalMs = 86400000; // 1 day
-      maxAbnormal = 2; // 0-2 per day
       break;
   }
 
+  // Generate more realistic pattern - most hours/days have 0, occasional spikes
   for (let i = intervals - 1; i >= 0; i--) {
     const timestamp = new Date(now - i * intervalMs).toISOString();
-    // Most times 0, occasionally 1-max
-    const abnormalCount = Math.random() > 0.7 ? Math.floor(Math.random() * maxAbnormal) + 1 : 0;
+    
+    // 85% chance of 0, 10% chance of 1, 5% chance of 2
+    let abnormalCount = 0;
+    const rand = Math.random();
+    if (rand < 0.85) {
+      abnormalCount = 0;
+    } else if (rand < 0.95) {
+      abnormalCount = 1;
+    } else {
+      abnormalCount = 2;
+    }
 
     series.push({
       timestamp,
@@ -48,11 +54,31 @@ function generateTimeSeries(window: TimeWindow): ColdChainTimeSeries[] {
 
 function generateOutletBreakdown(): OutletAbnormalCount[] {
   const outlets = generateOutlets();
-  return outlets.map((outlet) => ({
+  
+  // Generate abnormal counts with realistic distribution
+  const abnormalCounts: number[] = outlets.map((outlet, index) => {
+    // Most outlets (80%) have 0-1 abnormal readings
+    if (Math.random() < 0.8) {
+      return Math.random() < 0.7 ? 0 : 1;
+    }
+    // Some outlets (15%) have 2 abnormal readings
+    else if (Math.random() < 0.15) {
+      return 2;
+    }
+    // Top outlet (5%) has 3 abnormal readings
+    else {
+      return 3;
+    }
+  });
+  
+  // Ensure the top outlet has exactly 3 abnormal readings
+  const maxIndex = abnormalCounts.indexOf(Math.max(...abnormalCounts));
+  abnormalCounts[maxIndex] = 3;
+  
+  return outlets.map((outlet, index) => ({
     outletId: outlet.id,
     outletName: outlet.name,
-    // Most outlets have 0-5 alerts, a few have more
-    abnormalCount: Math.random() > 0.3 ? Math.floor(Math.random() * 3) : Math.floor(Math.random() * 8) + 3,
+    abnormalCount: abnormalCounts[index],
   }));
 }
 
