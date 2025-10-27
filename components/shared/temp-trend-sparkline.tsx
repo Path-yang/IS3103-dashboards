@@ -43,7 +43,9 @@ export function TempTrendSparkline({ data }: TempTrendSparklineProps) {
   // Create gradient definition for color changes
   const gradientStops = points.map((point, index) => {
     const offset = (index / (points.length - 1)) * 100;
-    const color = point.isAbnormal ? "#ef4444" : "#22c55e";
+    // Only make red if the actual temperature value exceeds threshold
+    const actualTemp = data[index].value;
+    const color = actualTemp > threshold ? "#ef4444" : "#22c55e";
     return { offset, color };
   });
   
